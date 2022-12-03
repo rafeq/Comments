@@ -12,24 +12,26 @@ class Comment extends StatefulWidget {
 }
 
 class _Comment extends State<Comment> {
-  late List myList;
+  List<Comments> myList = [];
   final ScrollController _scrollController = ScrollController();
-  int maxLoad = 20;
+  int maxLoad = 0;
+  final DioClient client = DioClient();
 
   @override
   void initState() {
     super.initState();
-    myList = List.generate(5, (index) => "null");
     _scrollController.addListener(() {
       if (_scrollController.position.pixels ==
           _scrollController.position.maxScrollExtent) {
         getMoreComments();
       }
     });
+    build(context);
   }
 
   getMoreComments() {
-    print("object");
+    //print("Hiiiii");
+    return client.getComment();
   }
 
   /* getMoreComments() async {
@@ -40,15 +42,38 @@ class _Comment extends State<Comment> {
   }*/
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      controller: _scrollController,
-      itemExtent: 20,
-      itemBuilder: (context, index) {
-        return const ListTile(
-          title: Text("jjj"),
-        );
-      },
-      itemCount: 20,
+    return Center(
+      child: FutureBuilder<List<Comments>>(
+        future: getMoreComments(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            final commentInfo = snapshot.data;
+            if (commentInfo != null) {
+              return ListView.builder(
+                controller: _scrollController,
+                itemExtent: 150,
+                shrinkWrap: true,
+                itemBuilder: (context, i) {
+                  return ListTile(
+                    leading: const Icon(Icons.person),
+                    title: Text(
+                      "name : ${commentInfo[i].name}",
+                      style:
+                          const TextStyle(color: Colors.cyan, fontSize: 20.0),
+                    ),
+                    subtitle: Text(
+                      "comment : ${commentInfo[i].body}",
+                      style: const TextStyle(color: Colors.lightBlueAccent),
+                    ),
+                  );
+                },
+                itemCount: commentInfo.length,
+              );
+            }
+          }
+          return const CircularProgressIndicator();
+        },
+      ),
     );
   }
 }
@@ -64,3 +89,12 @@ class _Comment extends State<Comment> {
       },
       itemCount: 20,
     ); */
+
+    /*Text(
+                      '${commentInfo.name} ${commentInfo.body}',
+                      style: const TextStyle(fontSize: 16.0),
+                    ),
+                    Text(
+                      commentData.email,
+                      style: const TextStyle(fontSize: 16.0),
+                    ), */

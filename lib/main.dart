@@ -4,6 +4,8 @@ import 'package:comments/Model/comment.dart';
 import 'package:comments/Model/comments.dart';
 import 'package:comments/View/comment_screen.dart';
 
+import 'View/comment_add.dart';
+
 void main() => runApp(
       const MaterialApp(
         home: MyApp(),
@@ -25,8 +27,14 @@ class _MyAppState extends State<MyApp> {
       appBar: AppBar(
         title: const Text("Hello Comments"),
       ),
-      body: Center(
-        child: Comment(),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            AddComment(),
+            const SizedBox(height: 15.0),
+            Comment(),
+          ],
+        ),
       ),
     );
   }

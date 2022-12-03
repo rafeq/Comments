@@ -1,18 +1,19 @@
-/*import 'package:comments/View/comment_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:mvc_pattern/mvc_pattern.dart';
+import '../Controller/dio.dart';
 
 class AddComment extends StatelessWidget {
   //const AddComment({super.key});
   //final CommentController _commentController = CommentController();
   final myCommentController = TextEditingController();
-
+  final DioClient client = DioClient();
+  final fieldText = TextEditingController();
   void dispose() {
     // Clean up the controller when the widget is disposed.
     myCommentController.dispose();
+  }
+
+  void clearText() {
+    fieldText.clear();
   }
 
   @override
@@ -21,9 +22,9 @@ class AddComment extends StatelessWidget {
   AddComment({super.key});
   @override
   Widget build(BuildContext context) {
-    return TextFormField(
-      controller: myCommentController,
-      //onSaved: (item) => _commentController.comments,
+    return TextField(
+      controller: fieldText,
+      onChanged: ((value) => client.createComment(value)),
       decoration: const InputDecoration(
         icon: Icon(Icons.comment),
         hintText: 'Please enter comment',
@@ -31,4 +32,4 @@ class AddComment extends StatelessWidget {
       ),
     );
   }
-}*/
+}
