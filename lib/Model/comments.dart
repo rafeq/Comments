@@ -7,7 +7,9 @@ class CommentModel {
   CommentModel(
     int postId,
     String name,
-    int id, {
+    int id,
+    String body,
+    String email, {
     required this.comments,
   });
 

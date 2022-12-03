@@ -9,11 +9,11 @@ class DioClient {
   final Dio _dio = Dio();
   final url = 'https://jsonplaceholder.typicode.com/comments/';
 
-  Future<List<Comments>> getComment() async {
+  Future<List<Comments?>> getComment() async {
     Comments? comment;
     for (int i = n; i < n + 20; i++) {
       try {
-        Response commentData = await _dio.get(url + i.toString());
+        final commentData = await _dio.get(url + i.toString());
         //print(i);
         //print('comments: ${commentData.toString()}');
         comment = Comments.fromJson(commentData.data);
@@ -32,14 +32,17 @@ class DioClient {
       //print(i);
       myList.add(comment!);
     }
+    print(n);
     n = n + 20;
+    // print(comment!.body);
+    //return comment;
 
     return myList;
   }
 
   Future createComment(final comm) async {
     Comments? comment;
-    print(comm);
+    //print(comm);
     const myUrl = 'https://cambium.co.il/test/testAssignComment';
     try {
       Response response = await _dio.post(
