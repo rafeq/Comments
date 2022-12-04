@@ -2,6 +2,7 @@ import '../Controller/dio.dart';
 import 'package:flutter/material.dart';
 import '../Model/comment.dart';
 import '../Model/comments.dart';
+import 'package:lazy_load_scrollview/lazy_load_scrollview.dart';
 
 class Comment extends StatefulWidget {
   Comment({super.key});
@@ -11,61 +12,103 @@ class Comment extends StatefulWidget {
 }
 
 class _Comment extends State<Comment> {
-  List<Future<Comments?>> myList = [];
-  final ScrollController _scrollController = ScrollController();
-  int maxLoad = 0, currMax = 1;
   final DioClient client = DioClient();
+  List<Comments?> verticalData = [];
+
+  bool isLoadingVertical = false;
 
   @override
   void initState() {
+    _loadMoreVertical();
+
     super.initState();
-    //myList = List.generate(20, (index) => client.getComment());
-    _scrollController.addListener(() {
-      if (_scrollController.position.pixels ==
-          _scrollController.position.maxScrollExtent) {
-        getMoreComments();
-      }
-    });
   }
 
-  getMoreComments() {
-    print("object");
-    return client.getComment();
+  Future _loadMoreVertical() async {
+    setState(() {
+      isLoadingVertical = true;
+    });
+
+    // Add in an artificial delay
+    await new Future.delayed(const Duration(seconds: 2));
+
+    verticalData = List.generate(20, (i) => client.getComment(i));
+
+    setState(() {
+      isLoadingVertical = false;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<Comments?>>(
-      future: client.getComment(),
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          final commentInfo = snapshot.data;
-          if (commentInfo != null) {
-            return ListView.builder(
-              itemExtent: 150,
-              shrinkWrap: true,
-              itemBuilder: (context, i) {
-                return ListTile(
-                  leading: const Icon(Icons.person),
-                  title: Text(
-                    "name : ${commentInfo[i]?.name}",
-                    style: const TextStyle(color: Colors.cyan, fontSize: 20.0),
-                  ),
-                  subtitle: Text(
-                    "comment :${commentInfo[i]?.body} ",
-                    style: const TextStyle(color: Colors.lightBlueAccent),
-                  ),
+    return LazyLoadScrollView(
+      isLoading: isLoadingVertical,
+      onEndOfPage: () => _loadMoreVertical(),
+      child: FutureBuilder<Comments>(
+          future: _loadMoreVertical(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              final commentInfo = snapshot.data;
+              if (commentInfo != null) {
+                verticalData = commentInfo.cast<Future<Comments?>>();
+                return ListView(
+                  scrollDirection: Axis.vertical,
+                  shrinkWrap: true,
+                  children: [
+                    ListView.builder(
+                      scrollDirection: Axis.vertical,
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemCount: verticalData.length,
+                      itemBuilder: (context, i) {
+                        return ListTile(
+                          leading: const Icon(Icons.person),
+                          title: Text(
+                            "name : ${verticalData[i]}",
+                            style: const TextStyle(
+                                color: Colors.cyan, fontSize: 20.0),
+                          ),
+                          subtitle: Text(
+                            "comment : ${verticalData[i]}",
+                            style:
+                                const TextStyle(color: Colors.lightBlueAccent),
+                          ),
+                        );
+                      },
+                    ),
+                  ],
                 );
-              },
-              itemCount: commentInfo.length,
-              controller: _scrollController,
-            );
-          }
-        }
-        return const CircularProgressIndicator();
-      },
+              }
+            }
+          }),
     );
   }
+
+/*LazyLoadScrollView(
+      isLoading: isLoadingVertical,
+      onEndOfPage: () => _loadMoreVertical(),
+      child: Scrollbar(
+        child: ListView.builder(
+          scrollDirection: Axis.vertical,
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: verticalData.length,
+          itemBuilder: (context, i) {
+            return ListTile(
+              leading: const Icon(Icons.person),
+              title: Text(
+                "name : ${verticalData[i].toString()}",
+                style: const TextStyle(color: Colors.cyan, fontSize: 20.0),
+              ),
+              subtitle: Text(
+                "comment : ${verticalData[i].toString()}",
+                style: const TextStyle(color: Colors.lightBlueAccent),
+              ),
+            );
+          },
+        ),
+      ),
+    ); */
 
   /*ListView.builder(
       controller: _scrollController,

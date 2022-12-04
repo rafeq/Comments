@@ -5,39 +5,41 @@ import '../Model/comment.dart';
 
 class DioClient {
   int n = 1;
-  List<Comments> myList = [];
+  List<Response?> myList = [];
   final Dio _dio = Dio();
   final url = 'https://jsonplaceholder.typicode.com/comments/';
 
-  Future<List<Comments?>> getComment() async {
+  Future<Comments?> getComment(int i) async {
     Comments? comment;
-    for (int i = n; i < n + 20; i++) {
-      try {
-        final commentData = await _dio.get(url + i.toString());
-        //print(i);
-        //print('comments: ${commentData.toString()}');
-        comment = Comments.fromJson(commentData.data);
-      } on DioError catch (e) {
-        if (e.response == null) {
-          print('Dio error!');
-          print('STATUS: ${e.response?.statusCode}');
-          print('DATA: ${e.response?.data}');
-          print('HEADERS: ${e.response?.headers}');
-        } else {
-          print('Error sending request!');
-          print(e.message);
-        }
+    //for (int i = n; i < n + 5; i++) {
+    //print('${url + i.toString()}+1');
+    i = i + 1;
+    try {
+      final commentData = await _dio.get(url + i.toString());
+      //print(url + i.toString());
+      //print('comments: ${commentData.toString()}');
+      comment = Comments.fromJson(commentData.data);
+    } on DioError catch (e) {
+      if (e.response == null) {
+        print('Dio error!');
+        print('STATUS: ${e.response?.statusCode}');
+        print('DATA: ${e.response?.data}');
+        print('HEADERS: ${e.response?.headers}');
+      } else {
+        print('Error sending request!');
+        print(e.message);
       }
-
-      //print(i);
-      myList.add(comment!);
     }
-    print(n);
-    n = n + 20;
-    // print(comment!.body);
-    //return comment;
 
-    return myList;
+    //print(comment!.getBody());
+    // myList.add(comment);
+    //}
+    //print(n);
+    //n = n + 5;
+    //print(comment!.body);
+    return comment;
+
+    // return myList;
   }
 
   Future createComment(final comm) async {

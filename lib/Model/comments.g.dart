@@ -6,7 +6,7 @@ part of 'comments.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-/*CommentModel _$CommentModelFromJson(Map<String, dynamic> json) {
+CommentModel _$CommentModelFromJson(Map<String, dynamic> json) {
   return CommentModel(
     comments: Comments.fromJson(json['comments'] as Map<String, dynamic>),
   );
@@ -15,4 +15,4 @@ part of 'comments.dart';
 Map<String, dynamic> _$CommentModelToJson(CommentModel instance) =>
     <String, dynamic>{
       'comments': instance.comments,
-    };*/
+    };

@@ -23,4 +23,12 @@ class Comments {
       _$CommentsFromJson(json);
 
   Map<String, dynamic> toJson() => _$CommentsToJson(this);
+
+  getName() {
+    return name;
+  }
+
+  getBody() {
+    return name;
+  }
 }
