@@ -1,8 +1,8 @@
 import '../Controller/dio.dart';
 import 'package:flutter/material.dart';
-import '../Model/comment.dart';
-import '../Model/comments.dart';
 import 'package:lazy_load_scrollview/lazy_load_scrollview.dart';
+
+import '../Model/comment.dart';
 
 class Comment extends StatefulWidget {
   Comment({super.key});
@@ -13,8 +13,9 @@ class Comment extends StatefulWidget {
 
 class _Comment extends State<Comment> {
   final DioClient client = DioClient();
-  List<Comments?> verticalData = [];
+  List verticalData = [];
 
+  final url = 'https://jsonplaceholder.typicode.com/comments/';
   bool isLoadingVertical = false;
 
   @override
@@ -30,7 +31,7 @@ class _Comment extends State<Comment> {
     });
 
     // Add in an artificial delay
-    await new Future.delayed(const Duration(seconds: 2));
+    // await new Future.delayed(const Duration(seconds: 2));
 
     verticalData = List.generate(20, (i) => client.getComment(i));
 
@@ -41,47 +42,40 @@ class _Comment extends State<Comment> {
 
   @override
   Widget build(BuildContext context) {
-    return LazyLoadScrollView(
-      isLoading: isLoadingVertical,
-      onEndOfPage: () => _loadMoreVertical(),
-      child: FutureBuilder<Comments>(
-          future: _loadMoreVertical(),
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              final commentInfo = snapshot.data;
-              if (commentInfo != null) {
-                verticalData = commentInfo.cast<Future<Comments?>>();
-                return ListView(
+    return FutureBuilder<Comments?>(
+        future: verticalData as Future<Comments?>,
+        builder: (context, snapshot) {
+          return LazyLoadScrollView(
+            isLoading: isLoadingVertical,
+            onEndOfPage: () => _loadMoreVertical(),
+            child: ListView(
+              scrollDirection: Axis.vertical,
+              shrinkWrap: true,
+              children: [
+                ListView.builder(
                   scrollDirection: Axis.vertical,
                   shrinkWrap: true,
-                  children: [
-                    ListView.builder(
-                      scrollDirection: Axis.vertical,
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      itemCount: verticalData.length,
-                      itemBuilder: (context, i) {
-                        return ListTile(
-                          leading: const Icon(Icons.person),
-                          title: Text(
-                            "name : ${verticalData[i]}",
-                            style: const TextStyle(
-                                color: Colors.cyan, fontSize: 20.0),
-                          ),
-                          subtitle: Text(
-                            "comment : ${verticalData[i]}",
-                            style:
-                                const TextStyle(color: Colors.lightBlueAccent),
-                          ),
-                        );
-                      },
-                    ),
-                  ],
-                );
-              }
-            }
-          }),
-    );
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: verticalData.length,
+                  itemBuilder: (context, i) {
+                    return ListTile(
+                      leading: const Icon(Icons.person),
+                      title: Text(
+                        "name : ${verticalData[i]['name']}",
+                        style:
+                            const TextStyle(color: Colors.cyan, fontSize: 20.0),
+                      ),
+                      subtitle: Text(
+                        "comment : ${verticalData[i]['body']}",
+                        style: const TextStyle(color: Colors.lightBlueAccent),
+                      ),
+                    );
+                  },
+                ),
+              ],
+            ),
+          );
+        });
   }
 
 /*LazyLoadScrollView(

@@ -5,20 +5,22 @@ import '../Model/comment.dart';
 
 class DioClient {
   int n = 1;
-  List<Response?> myList = [];
+  //List<Response?> myList = [];
   final Dio _dio = Dio();
   final url = 'https://jsonplaceholder.typicode.com/comments/';
 
   Future<Comments?> getComment(int i) async {
     Comments? comment;
+
     //for (int i = n; i < n + 5; i++) {
     //print('${url + i.toString()}+1');
     i = i + 1;
     try {
-      final commentData = await _dio.get(url + i.toString());
-      //print(url + i.toString());
+      final data = await _dio.get(url + i.toString());
+      //print(response);
       //print('comments: ${commentData.toString()}');
-      comment = Comments.fromJson(commentData.data);
+      comment = Comments.fromJson(data.data);
+      // print(comment);
     } on DioError catch (e) {
       if (e.response == null) {
         print('Dio error!');
@@ -36,7 +38,8 @@ class DioClient {
     //}
     //print(n);
     //n = n + 5;
-    //print(comment!.body);
+
+    //print(comment?.name);
     return comment;
 
     // return myList;
