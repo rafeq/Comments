@@ -1,3 +1,5 @@
+import 'package:flutter/services.dart';
+
 import '../Controller/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:lazy_load_scrollview/lazy_load_scrollview.dart';
@@ -54,19 +56,29 @@ class _Comment extends State<Comment> {
               onEndOfPage: () => _loadMoreVertical(),
               child: Scrollbar(
                 child: ListView.builder(
-                  itemExtent: 150,
+                  itemExtent: 210,
                   shrinkWrap: true,
                   itemBuilder: (context, i) {
-                    return ListTile(
-                      leading: const Icon(Icons.person),
-                      title: Text(
-                        "name : ${commentInfo[i].name}",
-                        style:
-                            const TextStyle(color: Colors.cyan, fontSize: 20.0),
-                      ),
-                      subtitle: Text(
-                        "comment : ${commentInfo[i].body}",
-                        style: const TextStyle(color: Colors.lightBlueAccent),
+                    return SafeArea(
+                      child: Card(
+                        elevation: 5,
+                        child: ListTile(
+                          leading: const Icon(Icons.person),
+                          title: Padding(
+                            padding: const EdgeInsets.only(bottom: 20.0),
+                            child: Text(
+                              "name : ${commentInfo[i].name}",
+                              style: const TextStyle(
+                                  color: Colors.cyan, fontSize: 20.0),
+                            ),
+                          ),
+                          subtitle: Text(
+                            "comment : ${commentInfo[i].body}",
+                            style:
+                                const TextStyle(color: Colors.lightBlueAccent),
+                          ),
+                          isThreeLine: true,
+                        ),
                       ),
                     );
                   },

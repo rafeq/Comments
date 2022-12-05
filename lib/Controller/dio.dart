@@ -42,13 +42,11 @@ class DioClient {
   }
 
   List<Comments> get gComments {
-    //print(myList[1].toString());
     return [...myList];
   }
 
   Future createComment(final comm) async {
     Comments? comment;
-    //print(comm);
     const myUrl = 'https://cambium.co.il/test/testAssignComment';
     try {
       Response response = await _dio.post(

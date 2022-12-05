@@ -2,18 +2,11 @@ import 'package:flutter/material.dart';
 import '../Controller/dio.dart';
 
 class AddComment extends StatelessWidget {
-  //const AddComment({super.key});
-  //final CommentController _commentController = CommentController();
-  final myCommentController = TextEditingController();
   final DioClient client = DioClient();
   final fieldText = TextEditingController();
-  void dispose() {
-    // Clean up the controller when the widget is disposed.
-    myCommentController.dispose();
-  }
 
   void clearText() {
-    fieldText.clear();
+    fieldText.text = "";
   }
 
   @override
@@ -22,14 +15,37 @@ class AddComment extends StatelessWidget {
   AddComment({super.key});
   @override
   Widget build(BuildContext context) {
-    return TextField(
-      controller: fieldText,
-      onChanged: ((value) => client.createComment(value)),
-      decoration: const InputDecoration(
-        icon: Icon(Icons.comment),
-        hintText: 'Please enter comment',
-        labelText: 'Comment',
-      ),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        Expanded(
+          child: SizedBox(
+            width: 200,
+            child: TextField(
+              controller: fieldText,
+              onChanged: ((value) => client.createComment(value)),
+              decoration: const InputDecoration(
+                icon: Icon(Icons.comment),
+                hintText: 'Please enter comment',
+                labelText: 'Comment',
+              ),
+            ),
+          ),
+        ),
+        Expanded(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              FloatingActionButton(
+                onPressed: () {
+                  fieldText.clear();
+                },
+                child: const Text("ENTER"),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }
