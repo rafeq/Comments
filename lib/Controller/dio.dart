@@ -6,7 +6,7 @@ class DioClient {
   List myList = [];
   final Dio _dio = Dio();
   final url = 'https://jsonplaceholder.typicode.com/comments/';
-
+//get 20 comment every time
   Future<List> getComment() async {
     Comment? comment;
     //load 20 comments

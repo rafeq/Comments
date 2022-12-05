@@ -1,8 +1,9 @@
+import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 part 'comment.g.dart';
 
 @JsonSerializable()
-class Comment {
+class Comment with ChangeNotifier {
   Comment({
     required this.postId,
     required this.name,

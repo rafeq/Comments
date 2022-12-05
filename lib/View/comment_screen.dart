@@ -1,10 +1,6 @@
-import 'package:flutter/services.dart';
-
 import '../Controller/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:lazy_load_scrollview/lazy_load_scrollview.dart';
-
-import '../Model/comment.dart';
 
 class Comment extends StatefulWidget {
   Comment({super.key});
@@ -49,6 +45,7 @@ class _Comment extends State<Comment> {
           final commentInfo = snapshot.data;
           if (commentInfo != null) {
             return LazyLoadScrollView(
+              //for loading 20 comment
               isLoading: isLoading,
               onEndOfPage: () => _loadMoreComments(),
               child: Scrollbar(
@@ -64,13 +61,13 @@ class _Comment extends State<Comment> {
                           title: Padding(
                             padding: const EdgeInsets.only(bottom: 20.0),
                             child: Text(
-                              "name : ${commentInfo[i].name}",
+                              "Name : ${commentInfo[i].name}",
                               style: const TextStyle(
                                   color: Colors.cyan, fontSize: 20.0),
                             ),
                           ),
                           subtitle: Text(
-                            "comment : ${commentInfo[i].body}",
+                            "Comment : ${commentInfo[i].body}",
                             style:
                                 const TextStyle(color: Colors.lightBlueAccent),
                           ),
