@@ -33,7 +33,8 @@ class _Comment extends State<Comment> {
     // Add in an artificial delay
     // await new Future.delayed(const Duration(seconds: 2));
 
-    verticalData = List.generate(20, (i) => client.getComment(i));
+    //List.generate(20, (i) => client.getComment(i));
+    verticalData = client.getComment() as List;
 
     setState(() {
       isLoadingVertical = false;
@@ -42,40 +43,42 @@ class _Comment extends State<Comment> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<Comments?>(
-        future: verticalData as Future<Comments?>,
-        builder: (context, snapshot) {
-          return LazyLoadScrollView(
-            isLoading: isLoadingVertical,
-            onEndOfPage: () => _loadMoreVertical(),
-            child: ListView(
-              scrollDirection: Axis.vertical,
-              shrinkWrap: true,
-              children: [
-                ListView.builder(
-                  scrollDirection: Axis.vertical,
+    return FutureBuilder(
+      future: client.getComment(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          final commentInfo = snapshot.data;
+          if (commentInfo != null) {
+            return LazyLoadScrollView(
+              isLoading: isLoadingVertical,
+              onEndOfPage: () => _loadMoreVertical(),
+              child: Scrollbar(
+                child: ListView.builder(
+                  itemExtent: 150,
                   shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: verticalData.length,
                   itemBuilder: (context, i) {
                     return ListTile(
                       leading: const Icon(Icons.person),
                       title: Text(
-                        "name : ${verticalData[i]['name']}",
+                        "name : ${commentInfo[i].name}",
                         style:
                             const TextStyle(color: Colors.cyan, fontSize: 20.0),
                       ),
                       subtitle: Text(
-                        "comment : ${verticalData[i]['body']}",
+                        "comment : ${commentInfo[i].body}",
                         style: const TextStyle(color: Colors.lightBlueAccent),
                       ),
                     );
                   },
+                  itemCount: commentInfo.length,
                 ),
-              ],
-            ),
-          );
-        });
+              ),
+            );
+          }
+        }
+        return const CircularProgressIndicator();
+      },
+    );
   }
 
 /*LazyLoadScrollView(

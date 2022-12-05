@@ -5,7 +5,7 @@ part 'comments.g.dart';
 @JsonSerializable()
 class CommentModel {
   CommentModel({
-    required this.comments,
+    required Comments this.comments,
   });
 
   Comments comments;

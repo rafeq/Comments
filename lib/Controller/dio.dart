@@ -5,44 +5,44 @@ import '../Model/comment.dart';
 
 class DioClient {
   int n = 1;
-  //List<Response?> myList = [];
+  List myList = [];
   final Dio _dio = Dio();
   final url = 'https://jsonplaceholder.typicode.com/comments/';
 
-  Future<Comments?> getComment(int i) async {
+  Future<List> getComment() async {
     Comments? comment;
 
-    //for (int i = n; i < n + 5; i++) {
-    //print('${url + i.toString()}+1');
-    i = i + 1;
-    try {
-      final data = await _dio.get(url + i.toString());
-      //print(response);
-      //print('comments: ${commentData.toString()}');
-      comment = Comments.fromJson(data.data);
-      // print(comment);
-    } on DioError catch (e) {
-      if (e.response == null) {
-        print('Dio error!');
-        print('STATUS: ${e.response?.statusCode}');
-        print('DATA: ${e.response?.data}');
-        print('HEADERS: ${e.response?.headers}');
-      } else {
-        print('Error sending request!');
-        print(e.message);
+    //i = i + 1;
+    for (int i = 1; i <= 20; i++) {
+      try {
+        final data = await _dio.get(url + i.toString());
+
+        comment = Comments.fromJson(data.data);
+      } on DioError catch (e) {
+        if (e.response == null) {
+          print('Dio error!');
+          print('STATUS: ${e.response?.statusCode}');
+          print('DATA: ${e.response?.data}');
+          print('HEADERS: ${e.response?.headers}');
+        } else {
+          print('Error sending request!');
+          print(e.message);
+        }
       }
+      myList.add(Comments(
+        postId: comment!.postId,
+        name: comment.name,
+        id: comment.id,
+        email: comment.email,
+        body: comment.body,
+      ));
     }
+    return myList;
+  }
 
-    //print(comment!.getBody());
-    // myList.add(comment);
-    //}
-    //print(n);
-    //n = n + 5;
-
-    //print(comment?.name);
-    return comment;
-
-    // return myList;
+  List<Comments> get gComments {
+    //print(myList[1].toString());
+    return [...myList];
   }
 
   Future createComment(final comm) async {
