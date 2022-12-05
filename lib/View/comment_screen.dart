@@ -28,12 +28,12 @@ class _Comment extends State<Comment> {
   }
 
   Future _loadMoreComments() async {
+    await Future.delayed(const Duration(seconds: 2));
     setState(() {
       isLoading = true;
     });
 
     client.getComment();
-    //verticalData = client.getComment() as List;
 
     setState(() {
       isLoading = false;
