@@ -1,6 +1,4 @@
-import 'package:comments/View/comment_screen.dart';
 import 'package:dio/dio.dart';
-import '../Model/comments.dart';
 import '../Model/comment.dart';
 
 class DioClient {
@@ -10,14 +8,13 @@ class DioClient {
   final url = 'https://jsonplaceholder.typicode.com/comments/';
 
   Future<List> getComment() async {
-    Comments? comment;
-
-    //i = i + 1;
+    Comment? comment;
+    //load 20 comments
     for (int i = n; i <= n + 20; i++) {
       try {
         final data = await _dio.get(url + i.toString());
 
-        comment = Comments.fromJson(data.data);
+        comment = Comment.fromJson(data.data);
       } on DioError catch (e) {
         if (e.response == null) {
           print('Dio error!');
@@ -29,7 +26,7 @@ class DioClient {
           print(e.message);
         }
       }
-      myList.add(Comments(
+      myList.add(Comment(
         postId: comment!.postId,
         name: comment.name,
         id: comment.id,
@@ -41,12 +38,9 @@ class DioClient {
     return myList;
   }
 
-  List<Comments> get gComments {
-    return [...myList];
-  }
-
+//to creat comment but fall because the website not real
   Future createComment(final comm) async {
-    Comments? comment;
+    Comment? comment;
     const myUrl = 'https://cambium.co.il/test/testAssignComment';
     try {
       Response response = await _dio.post(

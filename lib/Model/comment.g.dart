@@ -6,8 +6,8 @@ part of 'comment.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-Comments _$CommentsFromJson(Map<String, dynamic> json) {
-  return Comments(
+Comment _$CommentsFromJson(Map<String, dynamic> json) {
+  return Comment(
     postId: json['postId'] as int,
     name: json['name'] as String,
     id: json['id'] as int,
@@ -16,7 +16,7 @@ Comments _$CommentsFromJson(Map<String, dynamic> json) {
   );
 }
 
-Map<String, dynamic> _$CommentsToJson(Comments instance) => <String, dynamic>{
+Map<String, dynamic> _$CommentsToJson(Comment instance) => <String, dynamic>{
       'postId': instance.postId,
       'id': instance.id,
       'name': instance.name,

@@ -32,9 +32,6 @@ class _Comment extends State<Comment> {
       isLoadingVertical = true;
     });
 
-    // Add in an artificial delay
-    await new Future.delayed(const Duration(seconds: 2));
-
     client.getComment();
     //verticalData = client.getComment() as List;
 

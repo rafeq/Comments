@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import './Controller/dio.dart';
-import 'package:comments/Model/comment.dart';
-import 'package:comments/Model/comments.dart';
 import 'package:comments/View/comment_screen.dart';
 
 import 'View/comment_add.dart';
