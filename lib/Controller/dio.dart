@@ -13,7 +13,7 @@ class DioClient {
     Comments? comment;
 
     //i = i + 1;
-    for (int i = 1; i <= 20; i++) {
+    for (int i = n; i <= n + 20; i++) {
       try {
         final data = await _dio.get(url + i.toString());
 
@@ -37,6 +37,7 @@ class DioClient {
         body: comment.body,
       ));
     }
+    n = n + 20;
     return myList;
   }
 
