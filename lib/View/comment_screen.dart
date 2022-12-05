@@ -18,25 +18,25 @@ class _Comment extends State<Comment> {
   List verticalData = [];
 
   final url = 'https://jsonplaceholder.typicode.com/comments/';
-  bool isLoadingVertical = false;
+  bool isLoading = false;
 
   @override
   void initState() {
-    _loadMoreVertical();
+    _loadMoreComments();
 
     super.initState();
   }
 
-  Future _loadMoreVertical() async {
+  Future _loadMoreComments() async {
     setState(() {
-      isLoadingVertical = true;
+      isLoading = true;
     });
 
     client.getComment();
     //verticalData = client.getComment() as List;
 
     setState(() {
-      isLoadingVertical = false;
+      isLoading = false;
     });
   }
 
@@ -49,8 +49,8 @@ class _Comment extends State<Comment> {
           final commentInfo = snapshot.data;
           if (commentInfo != null) {
             return LazyLoadScrollView(
-              isLoading: isLoadingVertical,
-              onEndOfPage: () => _loadMoreVertical(),
+              isLoading: isLoading,
+              onEndOfPage: () => _loadMoreComments(),
               child: Scrollbar(
                 child: ListView.builder(
                   itemExtent: 210,
